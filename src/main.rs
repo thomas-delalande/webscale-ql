@@ -12,8 +12,8 @@ mod domain;
 mod index_util;
 mod utils;
 
-const INT_SIZE_BITS: u32 = 9;
-const STRING_SIZE_BITS: u32 = 16;
+const INT_SIZE_BITS: usize = 32;
+const STRING_SIZE_BITS: usize = 128;
 const DATA_PATH: &str = "data";
 
 fn main() {

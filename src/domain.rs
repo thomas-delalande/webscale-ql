@@ -63,11 +63,15 @@ pub fn insert(
     let row_as_bytes = values
         .iter()
         .enumerate()
-        .map(|(index, value)| match columns[index].column_type {
-            ColumnType::INT => format!("{:09x}", value.parse::<i64>().unwrap())
-                .as_bytes()
-                .to_owned(),
-            ColumnType::STRING => format!("{:0>16}", hex::encode(value)).as_bytes().to_owned(),
+        .map(|(index, value)| {
+            let size = column_size(&columns[index]);
+            let mut value = value.as_bytes().to_vec();
+            let mut vec = Vec::with_capacity(size);
+            for _ in 0..(size - value.len()) {
+                vec.push(0);
+            }
+            vec.append(&mut value);
+            vec
         })
         .collect::<Vec<Vec<u8>>>()
         .concat();
