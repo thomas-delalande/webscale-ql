@@ -70,7 +70,7 @@ pub fn convert_bytes_to_column(value: &[u8], schema: &ColumnDefinition) -> Strin
     }
 }
 
-pub fn column_size(column: &ColumnDefinition) -> u32 {
+pub fn column_size(column: &ColumnDefinition) -> usize {
     match &column.column_type {
         ColumnType::INT => INT_SIZE_BITS,
         ColumnType::STRING => STRING_SIZE_BITS,

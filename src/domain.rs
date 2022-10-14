@@ -4,9 +4,9 @@ use binary_search_tree::BinarySearchTree;
 use rand::{distributions::Alphanumeric, thread_rng, Rng};
 
 use crate::{
-    index_util::KeyValuePair,
+    index_util::{KeyValuePair, read_node_from_bytes},
     load_table_data, read_row,
-    utils::{get_unique_flag, to_column_schema, to_string},
+    utils::{get_unique_flag, to_column_schema, to_string, column_size},
     DATA_PATH, INT_SIZE_BITS, STRING_SIZE_BITS,
 };
 
@@ -30,9 +30,9 @@ pub fn create(table_name: &str, columns: Vec<ColumnDefinition>) {
             ColumnType::INT => INT_SIZE_BITS,
             ColumnType::STRING => STRING_SIZE_BITS,
         })
-        .collect::<Vec<u32>>()
+        .collect::<Vec<usize>>()
         .iter()
-        .sum::<u32>();
+        .sum::<usize>();
 
     let mut file = std::fs::File::create(format!("{DATA_PATH}/{table_name}.schema")).unwrap();
     file.write_all(format!("-1\n{row_size}\n").as_bytes())

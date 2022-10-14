@@ -33,12 +33,12 @@ impl KeyValuePair {
 }
 
 #[derive(Debug)]
-struct NodeData {
-    value: String,
-    position: usize,
+pub struct NodeData {
+    pub value: String,
+    pub position: usize,
 }
 
-fn read_node_from_bytes(bytes: &[u8], column_size: usize) -> NodeData {
+pub fn read_node_from_bytes(bytes: &[u8], column_size: usize) -> NodeData {
     let value_bytes = &bytes[0..column_size];
     let position_bytes = &bytes[column_size..(column_size + INT_SIZE_BITS as usize)];
     let position = i64::from_str_radix(
