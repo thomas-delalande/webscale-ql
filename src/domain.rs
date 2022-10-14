@@ -6,7 +6,7 @@ use rand::{distributions::Alphanumeric, thread_rng, Rng};
 use crate::{
     index_util::{KeyValuePair, read_node_from_bytes},
     load_table_data, read_row,
-    utils::{get_unique_flag, to_column_schema, to_string, column_size},
+    utils::{get_unique_flag, to_column_schema, to_string, column_size_bytes},
     DATA_PATH, INT_SIZE_BITS, STRING_SIZE_BITS,
 };
 
@@ -64,14 +64,11 @@ pub fn insert(
         .iter()
         .enumerate()
         .map(|(index, value)| {
-            let size = column_size(&columns[index]);
             let mut value = value.as_bytes().to_vec();
-            let mut vec = Vec::with_capacity(size);
-            for _ in 0..(size - value.len()) {
-                vec.push(0);
-            }
-            vec.append(&mut value);
-            vec
+            let mut fixed_size_value = vec![0; column_size_bytes(&columns[index])];
+            fixed_size_value.drain(0..value.len());
+            fixed_size_value.append(&mut value);
+            fixed_size_value
         })
         .collect::<Vec<Vec<u8>>>()
         .concat();

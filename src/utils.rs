@@ -60,10 +60,10 @@ pub fn convert_bytes_to_column(value: &[u8], schema: &ColumnDefinition) -> Strin
         .to_string()
 }
 
-pub fn column_size(column: &ColumnDefinition) -> usize {
+pub fn column_size_bytes(column: &ColumnDefinition) -> usize {
     match &column.column_type {
-        ColumnType::INT => INT_SIZE_BITS,
-        ColumnType::STRING => STRING_SIZE_BITS,
+        ColumnType::INT => INT_SIZE_BITS / 8,
+        ColumnType::STRING => STRING_SIZE_BITS / 8,
     }
 }
 
