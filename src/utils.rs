@@ -40,7 +40,7 @@ pub fn load_table_data(table_name: &String) -> TableData {
             return ColumnDefinition {
                 name: split[0].to_string(),
                 column_type: to_column_type(&split[1].to_string()),
-                index: index - 1,
+                column_position: index - 1,
             };
         })
         .collect::<Vec<ColumnDefinition>>();

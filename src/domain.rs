@@ -5,7 +5,7 @@ use rand::{distributions::Alphanumeric, thread_rng, Rng};
 
 use crate::{
     index_util::KeyValuePair,
-    load_table_data, read_node_from_bytes, read_row,
+    load_table_data, read_row,
     utils::{get_unique_flag, to_column_schema, to_string},
     DATA_PATH, INT_SIZE_BITS, STRING_SIZE_BITS,
 };
@@ -14,7 +14,7 @@ use crate::{
 pub struct ColumnDefinition {
     pub name: String,
     pub column_type: ColumnType,
-    pub index: u8,
+    pub column_position: u8,
 }
 
 #[derive(Debug, Clone)]
@@ -103,7 +103,7 @@ pub fn create_index(table_name: String, column: &ColumnDefinition) {
         .filter(|row| row.1.len() > 1)
         .map(|(_index, row)| {
             let values = read_row(&row.to_vec(), &table_data.schema);
-            let index: usize = schema.index.into();
+            let index: usize = schema.column_position.into();
             let data = values.get(index).unwrap();
             data.to_owned()
         })
@@ -160,7 +160,7 @@ pub fn select(table_name: &str, column: &str, expected: &str) {
             .collect::<Vec<Vec<String>>>();
         rows.retain(|row| {
             let values = row;
-            return values.into_iter().nth(column_schema.index.into()).unwrap() == expected;
+            return values.into_iter().nth(column_schema.column_position.into()).unwrap() == expected;
         });
         rows
     };
@@ -200,7 +200,7 @@ pub fn search_with_index(table_name: &String, column_name: &String, value: &Stri
     }
 }
 
-fn random(table: &str, flags: Vec<&str>) {
+pub fn random(table: &str, flags: Vec<&str>) {
     let num = &get_unique_flag(flags, &"num".to_string())[0]
         .parse::<usize>()
         .unwrap();

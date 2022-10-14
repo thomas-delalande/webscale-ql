@@ -1,5 +1,4 @@
-use domain::{create_index, select, search_with_index};
-use rand::{distributions::Alphanumeric, thread_rng, Rng};
+use domain::{create_index, select, search_with_index, random};
 use utils::{column_size, convert_bytes_to_column, get_unique_flag};
 use std::{
     fs::File,
@@ -58,7 +57,7 @@ fn create_command(table_name: &str, flags: Vec<&str>) {
                 return ColumnDefinition {
                     name: name.to_string(),
                     column_type: row_type,
-                    index,
+                    column_position: index,
                 };
             } else {
                 panic!("Can only create col.")
@@ -69,7 +68,7 @@ fn create_command(table_name: &str, flags: Vec<&str>) {
         0,
         ColumnDefinition {
             column_type: ColumnType::INT,
-            index: 0,
+            column_position: 0,
             name: "_rowid".to_string(),
         },
     );
