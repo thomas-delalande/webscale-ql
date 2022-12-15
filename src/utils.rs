@@ -53,27 +53,17 @@ pub fn load_table_data(table_name: &String) -> TableData {
 }
 
 pub fn convert_bytes_to_column(value: &[u8], schema: &ColumnDefinition) -> String {
-    match schema.column_type {
-        ColumnType::STRING => {
-            let word = hex::decode(value).unwrap();
-            std::str::from_utf8(&word)
-                .unwrap()
-                .to_string()
-                .trim_start_matches('\0')
-                .to_string()
-        }
-        ColumnType::INT => {
-            i64::from_str_radix(&std::str::from_utf8(value).unwrap().to_string(), 16)
-                .unwrap()
-                .to_string()
-        }
-    }
+    std::str::from_utf8(&value)
+        .unwrap()
+        .to_string()
+        .trim_start_matches('\0')
+        .to_string()
 }
 
-pub fn column_size(column: &ColumnDefinition) -> usize {
+pub fn column_size_bytes(column: &ColumnDefinition) -> usize {
     match &column.column_type {
-        ColumnType::INT => INT_SIZE_BITS,
-        ColumnType::STRING => STRING_SIZE_BITS,
+        ColumnType::INT => INT_SIZE_BITS / 8,
+        ColumnType::STRING => STRING_SIZE_BITS / 8,
     }
 }
 

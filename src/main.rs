@@ -1,5 +1,5 @@
 use domain::{create_index, select, search_with_index, random};
-use utils::{column_size, convert_bytes_to_column, get_unique_flag};
+use utils::{column_size_bytes, convert_bytes_to_column, get_unique_flag};
 use std::{
     fs::File,
     io::{self, BufRead, BufReader, Write},
@@ -12,8 +12,8 @@ mod domain;
 mod index_util;
 mod utils;
 
-const INT_SIZE_BITS: u32 = 9;
-const STRING_SIZE_BITS: u32 = 16;
+const INT_SIZE_BITS: usize = 32;
+const STRING_SIZE_BITS: usize = 128;
 const DATA_PATH: &str = "data";
 
 fn main() {
@@ -151,7 +151,7 @@ fn read_row(row: &Vec<u8>, schema: &Vec<ColumnDefinition>) -> Vec<String> {
     schema
         .iter()
         .map(|col| {
-            let size: usize = column_size(col).try_into().unwrap();
+            let size: usize = column_size_bytes(col).try_into().unwrap();
             let value = row[position..(position + size)].to_vec();
             position += size;
             convert_bytes_to_column(&value, col)
